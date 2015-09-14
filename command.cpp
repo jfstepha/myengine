@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <string>
+#include <sstream>
+#include <stdio.h>
 #include "defines.h"
 #include "protos.h"
 #include "extglobals.h"
@@ -33,6 +35,9 @@ void readCommands()
 /*********************************************************************/
 {
 	string command;
+    string userinput;
+    int number;
+
 	while(1){
 
 		cin >> command;
@@ -49,6 +54,7 @@ void readCommands()
 			cout << "  white    : white to move" << endl;
 			cout << "  info     : dump out some information" << endl;
 			cout << "  new      : new" << endl;
+            cout << "  readfen  : input a fen position" << endl;
 		}
 		else if( command == "uci" ) {
 			cmdUCI();
@@ -78,8 +84,18 @@ void readCommands()
 		}
 		else if( command == "white" ) {
 			board.nextMove = WHITE_MOVE;
+		}
+		else if( !command.find("readfen") ) {
+			cout << "reading fen..." << endl;
+			cin >> userinput;
+			cin >> number;
+			cout << "  filename: " << userinput << endl;
+			cout << "  number: " << number << endl;
+			board.init();
+			readFen(userinput.c_str(), 1);
 		} else {
 			cout << " command not implemented:" << command << ", type 'help' for more info" << endl;
 		}
+		getline( cin, command);
 	}
 }
