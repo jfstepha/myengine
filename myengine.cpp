@@ -8,8 +8,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include "defines.h"
+#include "protos.h"
+#include "globals.h"
+
+using namespace std;
 
 int main(void) {
-	puts("!!!Hello World!!!");
+	cout << PROG_VER << endl;
+	readCommands();
+	cout << "Done." << endl;
 	return EXIT_SUCCESS;
 }

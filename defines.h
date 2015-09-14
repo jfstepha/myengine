@@ -11,5 +11,7 @@
 #define PROG_VER "myengine version 0.0"
 #define MAX_CMD_BUFF 256
 
+typedef int BOOLTYPE;
+
 
 #endif /* DEFINES_H_ */
