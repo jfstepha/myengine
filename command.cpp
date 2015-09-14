@@ -42,19 +42,44 @@ void readCommands()
 		/* parse command */
 		if( command == "help" ) {
 			cout << "help:" << endl;
-			cout << "  uci : tell the engine to switch to UCI mode." << endl;
-			cout << "  d   : display the board" << endl ;
+			cout << "  uci      : tell the engine to switch to UCI mode." << endl;
+			cout << "  d        : display the board" << endl ;
+			cout << "  r        : rotate the board" << endl;
+			cout << "  black    : black to move" << endl;
+			cout << "  white    : white to move" << endl;
+			cout << "  info     : dump out some information" << endl;
+			cout << "  new      : new" << endl;
 		}
-		if( command == "uci" ) {
+		else if( command == "uci" ) {
 			cmdUCI();
 		}
-		if( command == "quit" ) {
+		else if( command == "quit" ) {
 			cout << "quitting" << endl;
 			return;
 		}
-		if( command == "d") {
+		else if( command == "d") {
 			cout << "board:" << endl;
 			board.display();
+		}
+		else if( command == "black" ) {
+			board.nextMove = BLACK_MOVE;
+		}
+		else if( command == "info" ) {
+			info();
+		}
+		else if( command == "new" ) {
+			dataInit();
+			board.init();
+			board.display();
+		}
+		else if( command == "r" ) {
+			board.viewRotated = !board.viewRotated;
+			board.display();
+		}
+		else if( command == "white" ) {
+			board.nextMove = WHITE_MOVE;
+		} else {
+			cout << " command not implemented:" << command << ", type 'help' for more info" << endl;
 		}
 	}
 }
