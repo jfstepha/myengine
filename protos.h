@@ -11,6 +11,13 @@
 #ifndef PROTOS_H_
 #define PROTOS_H_
 
+unsigned int  bitCnt(BitMap);
+void          dataInit();
+void          displayBitmap(BitMap);
+unsigned int  firstOne(BitMap);
+void          info();
+unsigned int  lastOne(BitMap);
+
 BOOLTYPE    doCommand(const char *buf);
 void        readCommands();
 

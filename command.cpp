@@ -9,6 +9,9 @@
 #include <string>
 #include "defines.h"
 #include "protos.h"
+#include "extglobals.h"
+#include "board.h"
+#include "globals.h"
 
 using namespace std;
 /*********************************************************************/
@@ -37,16 +40,21 @@ void readCommands()
 		cout << "##Read: " << command << "." << endl;
 
 		/* parse command */
-		if( !command.find( "help" ) ) {
+		if( command == "help" ) {
 			cout << "help:" << endl;
-			cout << "  uci : tell the engine to switch to UCI mode.";
+			cout << "  uci : tell the engine to switch to UCI mode." << endl;
+			cout << "  d   : display the board" << endl ;
 		}
-		if( !command.find("uci")) {
+		if( command == "uci" ) {
 			cmdUCI();
 		}
-		if( !command.find("quit")) {
+		if( command == "quit" ) {
 			cout << "quitting" << endl;
 			return;
+		}
+		if( command == "d") {
+			cout << "board:" << endl;
+			board.display();
 		}
 	}
 }

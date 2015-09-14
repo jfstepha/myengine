@@ -14,4 +14,10 @@
 typedef int BOOLTYPE;
 
 
+typedef unsigned long long U64;
+typedef unsigned long long BitMap;
+typedef short SHORTINT;
+typedef unsigned short USHORTINT;
+typedef int BOOLTYPE;
+
 #endif /* DEFINES_H_ */

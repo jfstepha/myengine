@@ -11,12 +11,13 @@
 #include <iostream>
 #include "defines.h"
 #include "protos.h"
-#include "globals.h"
+#include "extglobals.h"
 
 using namespace std;
 
 int main(void) {
 	cout << PROG_VER << endl;
+	dataInit();
 	readCommands();
 	cout << "Done." << endl;
 	return EXIT_SUCCESS;
