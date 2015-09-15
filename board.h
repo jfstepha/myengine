@@ -10,7 +10,7 @@
 
 #include "defines.h"
 #include "move.h"
-
+#include "gameline.h"
 
 struct Board
 {
@@ -34,6 +34,9 @@ struct Board
        // storing moves:
        Move moveBuffer[MAX_MOV_BUFF]; // all generated moves of the current search tree are stored in this array.
        int moveBufLen[MAX_PLY];       // this arrays keeps track of which moves belong to which ply
+       int endOfGame;                 // index for board.gameLine
+       int endOfSearch;               // index for board.gameLine
+       GameLineRecord gameLine[MAX_GAME_LINE];
 
        void init();
        void initFromSquares(int input[64], unsigned char next, int fiftyM, int castleW, int castleB, int epSq);
