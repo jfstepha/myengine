@@ -11,6 +11,7 @@
 #include "defines.h"
 #include "move.h"
 #include "gameline.h"
+#include "timer.h"
 
 struct Board
 {
@@ -38,7 +39,22 @@ struct Board
        int endOfSearch;               // index for board.gameLine
        GameLineRecord gameLine[MAX_GAME_LINE];
 
+       // search variables:
+       int triangularLength[MAX_PLY];
+       Move triangularArray[MAX_PLY][MAX_PLY];
+       Timer timer;
+       U64 msStart, msStop;
+       int searchDepth;
+       U64 inodes;
+
        void init();
+       int eval();
+       Move think();
+       int minimax(int ply, int depth);
+       int alphabeta(int ply, int depth, int alpha, int beta);
+       int alphabetapvs(int ply, int depth, int alpha, int beta);
+       void displaySearchStats(int mode, int depth, int score);
+       void mirror();
        void initFromSquares(int input[64], unsigned char next, int fiftyM, int castleW, int castleB, int epSq);
        void initFromFen(char fen[], char fencolor[], char fencastling[], char fenenpassant[], int fenhalfmoveclock, int fenfullmovenumber);
        void display();

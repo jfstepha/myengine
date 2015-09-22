@@ -23,22 +23,22 @@ using namespace std;
 /*********************************************************************/
 void listOptions() {
 /*********************************************************************/
-	cout << "option stupid type spin default 1 min 1 max 128" << endl;
+    cout << "option stupid type spin default 1 min 1 max 128" << endl;
 }
 /*********************************************************************/
 void cmdUCI(){
 /*********************************************************************/
-	cout << "id " << PROG_VER << endl;
-	cout << "id author Jon Stephan" << endl;
-	listOptions();
-	cout << "uciok" << endl;
+    cout << "id " << PROG_VER << endl;
+    cout << "id author Jon Stephan" << endl;
+    listOptions();
+    cout << "uciok" << endl;
 
 }
 /*********************************************************************/
 void readCommands()
 /*********************************************************************/
 {
-	string command;
+    string command;
     string userinput;
     int number;
     int i;
@@ -48,90 +48,113 @@ void readCommands()
     U64 msStop;
     U64 perftcount;
 
-	while(1){
+    while(1){
 
-		cin >> command;
+        cin >> command;
 
-		cout << "##Read: " << command << "." << endl;
+        cout << "##Read: " << command << "." << endl;
 
-		/* parse command */
-		if( command == "help" ) {
-			cout << "help:" << endl;
-			cout << "  uci       : tell the engine to switch to UCI mode." << endl;
-			cout << "  d         : display the board" << endl ;
-			cout << "  r         : rotate the board" << endl;
-			cout << "  black     : black to move" << endl;
-			cout << "  white     : white to move" << endl;
-			cout << "  info      : dump out some information" << endl;
-			cout << "  new       : new" << endl;
+        /* parse command */
+        if( command == "help" ) {
+            cout << "help:" << endl;
+            cout << "  uci       : tell the engine to switch to UCI mode." << endl;
+            cout << "  d         : display the board" << endl ;
+            cout << "  r         : rotate the board" << endl;
+            cout << "  black     : black to move" << endl;
+            cout << "  white     : white to move" << endl;
+            cout << "  info      : dump out some information" << endl;
+            cout << "  new       : new" << endl;
             cout << "  readfen   : input a fen position" << endl;
             cout << "  moves     : show all legal moves" << endl;
             cout << "  game      : show all game moves" << endl;
             cout << "  move      : do a move " << endl;
             cout << "  perft <n> : calculate raw number of nodes from here, depth n " << endl;
             cout << "  undo      : take back last move" << endl;
+            cout << "  eval      : evaluate the current position" << endl;
+            cout << "  mirror    : mirror the board" << endl;
+            cout << "  go        : start thinking " << endl;
+            cout << "  sd        : set search depth" << endl;
         /*---------------------------------------------------------*/
-		} else if( command == "uci" ) {
-			cmdUCI();
+        } else if( command == "uci" ) {
+            cmdUCI();
         /*---------------------------------------------------------*/
-		} else if( command == "quit" ) {
-			cout << "quitting" << endl;
-			return;
+        } else if( command == "quit" ) {
+            cout << "quitting" << endl;
+            return;
         /*---------------------------------------------------------*/
-		} else if( command == "d") {
-			cout << "board:" << endl;
-			board.display();
+        } else if( command == "d") {
+            cout << "board:" << endl;
+            board.display();
         /*---------------------------------------------------------*/
-		} else if( command == "black" ) {
-			board.nextMove = BLACK_MOVE;
+        } else if( command == "mirror") {
+            cout << "mirroring" << endl;
+            board.mirror();
+            board.display();
         /*---------------------------------------------------------*/
-		} else if( command == "info" ) {
-			info();
+        } else if( command == "eval") {
+            number = board.eval();
+            cout << "eval score = " << number << endl;
+#ifdef WINGLET_DEBUG_EVAL
+           board.mirror();
+           board.display();
+           i = board.eval();
+           std::cout << "eval score = " << i << std::endl;
+           board.mirror();
+           if (number != i) std::cout << "evaluation is not symmetrical! " << number << std::endl;
+           else std::cout << "evaluation is symmetrical" << std::endl;
+#endif
+
         /*---------------------------------------------------------*/
-		} else if( command == "new" ) {
-			dataInit();
-			board.init();
-			board.display();
+        } else if( command == "black" ) {
+            board.nextMove = BLACK_MOVE;
         /*---------------------------------------------------------*/
-		} else if( command == "r" ) {
-			board.viewRotated = !board.viewRotated;
-			board.display();
+        } else if( command == "info" ) {
+            info();
         /*---------------------------------------------------------*/
-		} else if( command == "white" ) {
-			board.nextMove = WHITE_MOVE;
+        } else if( command == "new" ) {
+            dataInit();
+            board.init();
+            board.display();
         /*---------------------------------------------------------*/
-		} else if( !command.find("readfen") ) {
-			cout << "reading fen..." << endl;
-			cin >> userinput;
-			cin >> number;
-			cout << "  filename: " << userinput << endl;
-			cout << "  number: " << number << endl;
-			board.init();
-			readFen(userinput.c_str(), 1);
+        } else if( command == "r" ) {
+            board.viewRotated = !board.viewRotated;
+            board.display();
         /*---------------------------------------------------------*/
-		} else if ( command == "moves" ) {
-			  board.moveBufLen[0] = 0;
-			  board.moveBufLen[1] = movegen(board.moveBufLen[0]);
-			  cout << endl << "moves from this position:" << endl;
+        } else if( command == "white" ) {
+            board.nextMove = WHITE_MOVE;
+        /*---------------------------------------------------------*/
+        } else if( !command.find("readfen") ) {
+            cout << "reading fen..." << endl;
+            cin >> userinput;
+            cin >> number;
+            cout << "  filename: " << userinput << endl;
+            cout << "  number: " << number << endl;
+            board.init();
+            readFen(userinput.c_str(), 1);
+        /*---------------------------------------------------------*/
+        } else if ( command == "moves" ) {
+              board.moveBufLen[0] = 0;
+              board.moveBufLen[1] = movegen(board.moveBufLen[0]);
+              cout << endl << "moves from this position:" << endl;
               for (i = board.moveBufLen[0]; i < board.moveBufLen[1]; i++) {
                   makeMove(board.moveBuffer[i]);
-	              if (isOtherKingAttacked())             {
+                  if (isOtherKingAttacked())             {
                       unmakeMove(board.moveBuffer[i]);
                   } else {
                       cout << i+1 << ". " ;
-		              displayMove(board.moveBuffer[i]);
-		              cout << endl;
-		              unmakeMove(board.moveBuffer[i]);
-		          }
-		      }
-			  for (i = board.moveBufLen[0]; i < board.moveBufLen[1]; i++) {
-				   cout << i+1 << ". " ;
-				   displayMove(board.moveBuffer[i]);
-				   cout << std::endl;
-			  }
+                      displayMove(board.moveBuffer[i]);
+                      cout << endl;
+                      unmakeMove(board.moveBuffer[i]);
+                  }
+              }
+              for (i = board.moveBufLen[0]; i < board.moveBufLen[1]; i++) {
+                   cout << i+1 << ". " ;
+                   displayMove(board.moveBuffer[i]);
+                   cout << std::endl;
+              }
         /*---------------------------------------------------------*/
-		} else if (command == "move") {
-			cin >> userinput;
+        } else if (command == "move") {
+            cin >> userinput;
 
             // generate the pseudo-legal move list
             board.moveBufLen[0] = 0;
@@ -149,10 +172,10 @@ void readCommands()
                     board.display();
                 }
             } else {
-		        cout << "    move is invalid or not recognized: " << userinput << endl;
-		    }
+                cout << "    move is invalid or not recognized: " << userinput << endl;
+            }
         /*---------------------------------------------------------*/
-		} else if (command == "perft") {
+        } else if (command == "perft") {
                    cin >> number;
                    cout << "    starting perft " << number << "..." << endl;
                    timer.init();
@@ -184,7 +207,7 @@ void readCommands()
                    std::cout << "checks       = " << ICHECK << std::endl;
      #endif
         /*---------------------------------------------------------*/
-		} else if (command == "undo") {
+        } else if (command == "undo") {
                    if (board.endOfGame) {
                           unmakeMove(board.gameLine[--board.endOfGame].move);
                           board.endOfSearch = board.endOfGame;
@@ -193,7 +216,7 @@ void readCommands()
                           cout << "already at start of game" << endl;
                    }
         /*---------------------------------------------------------*/
-		} else if ( command == "game") {
+        } else if ( command == "game") {
             if (board.endOfGame) {
                for (i = 0 ; i < board.endOfGame ; i++) {
                   cout << i+1 << ". ";
@@ -205,9 +228,51 @@ void readCommands()
                cout << "there are no game moves" << endl;
             }
         /*---------------------------------------------------------*/
-		} else {
-			cout << " command not implemented:" << command << ", type 'help' for more info" << endl;
-		}
-		getline( cin, command);
-	}
+        } else if ( command == "go") {
+            move = board.think();
+            if(move.moveInt) {
+                makeMove(move);
+                board.endOfGame++;
+                board.endOfSearch = board.endOfGame;
+            }
+            board.display();
+        /*---------------------------------------------------------*/
+        } else if ( !command.find("sd")) {
+            cin >> number;
+            cout << "Setting search depth to " << number << endl;
+            board.searchDepth = number;
+        } else {
+            // winboard sends moves with no command...
+            userinput = command;
+
+            // generate the pseudo-legal move list
+            board.moveBufLen[0] = 0;
+            board.moveBufLen[1] = movegen(board.moveBufLen[0]);
+
+            if (isValidTextMove(userinput.c_str(), move)) {      // check to see if the user move is also found in the pseudo-legal move list
+                makeMove(move);
+
+                if (isOtherKingAttacked()){             // post-move check to see if we are leaving our king in check
+                    unmakeMove(move);
+                    cout << "    invalid move, leaving king in check: " << userinput << std::endl;
+                } else {
+                    board.endOfGame++;
+                    board.endOfSearch = board.endOfGame;
+                    board.display();
+                    // and also move
+                    move = board.think();
+                    if(move.moveInt) {
+                        makeMove(move);
+                        board.endOfGame++;
+                        board.endOfSearch = board.endOfGame;
+                    }
+                    board.display();
+                    cout << "move " ; displayMove(move) ; cout << endl;
+                }
+            } else {
+                cout << "    move is invalid or not recognized: " << userinput << endl;
+            }
+        }
+        getline( cin, command);
+    }
 }

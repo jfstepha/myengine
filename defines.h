@@ -11,7 +11,8 @@
 #define PROG_VER "myengine version 0.0"
 //#define WINGLET_DEBUG_PERFT
 //#define WINGLET_DEBUG_MOVES
-
+#undef WINGLET_VERBOSE_EVAL
+#undef WINGLET_DEBUG_EVAL
 
 #define MAX_CMD_BUFF 256
 #define MAX_MOV_BUFF 4096    // Number of moves that we can store (all plies)

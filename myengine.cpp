@@ -17,7 +17,20 @@ using namespace std;
 
 int main(void) {
 	cout << PROG_VER << endl;
+#ifdef WINGLET_DEBUG_PERFT
+   std::cout << "WINGLET_DEBUG_PERFT defined" << std::endl;
+#endif
+#ifdef WINGLET_DEBUG_MOVES
+   std::cout << "WINGLET_DEBUG_MOVES defined" << std::endl;
+#endif
+#ifdef WINGLET_VERBOSE_EVAL
+   std::cout << "WINGLET_VERBOSE_EVAL defined" << std::endl;
+#endif
+#ifdef WINGLET_DEBUG_EVAL
+   std::cout << "WINGLET_DEBUG_EVAL defined" << std::endl;
+#endif
 	dataInit();
+	board.searchDepth = 2;
 	readCommands();
 	cout << "Done." << endl;
 	return EXIT_SUCCESS;
